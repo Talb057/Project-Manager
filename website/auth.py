@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash
 import psycopg2
 
 auth = Blueprint('auth', __name__)
@@ -10,6 +10,9 @@ def signin():
 @auth.route('/signup', methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        data = request.form
+        print(data)
+        
         email = request.form.get("email")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
@@ -17,25 +20,22 @@ def signup():
         
         conn = connect_db()
         cur = conn.cursor()
-        cur.execute(f"SELECT user.id, user.email FROM user WHERE user.email = {email};")
+        cur.execute(f"SELECT users.user_id, users.email FROM users WHERE users.email = '{email}';")
         data = cur.fetchall()
         if(len(data) > 0):
-            # flash('Email already exists', category='error')
-            print("Email already exists")
+            flash('Email already exists', category='error')
         elif len(password1) < 8:
-            # flash('Password must be longer than or 7 characters', category='error')
-            print("Passwrd must be longer than 8")
+            flash('Password must be longer than or 8 characters', category='error')
         elif password1 != password2:
-            # flash('Passwords don\'t match', category='error')
-            print("Password don't match")
+            flash('Passwords don\'t match', category='error')
         else:
-            cur.execute('INSERT INTO client (email, password, NAS, nom, addresse, card_number)'
-                'VALUES (%s, %s, %s, %s, %s, %s)',
+            cur.execute('INSERT INTO users (name, email, password)'
+                'VALUES (%s, %s, %s)',
                 (f'{name}',
                 f'{email}',
                 f'{password1}')
                 )
-            print("User added")
+            flash('Account created succesfully', category = 'success')
             conn.commit()
             cur.close() 
             conn.close()
@@ -48,7 +48,7 @@ def connect_db():
     conn = psycopg2.connect(
             host = "localhost",
             database = "project_db",
-            user = "manager",
+            user = "postgres",
             port = "5432",
-            password = "Mon12345")
+            password = "berserk")
     return conn
