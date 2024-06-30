@@ -1,17 +1,34 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 import psycopg2
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/signin')
+@auth.route('/signin', methods = ['GET', 'POST'])
 def signin():
+    if request.method == 'POST':
+        
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute(f"SELECT users.email, users.password FROM users WHERE users.email = '{email}';")
+        data = cur.fetchall()
+        print("Data is")
+        print(data) 
+
+        if(len(data) < 1):
+            flash('Email doesn\'t exist', category = 'error')
+        elif(password != data[0][1]):
+            flash('Email and password don\'t match', category='error')
+        else:
+            return redirect(url_for('views.home'))
+
     return render_template("signin.html")
 
 @auth.route('/signup', methods = ['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        data = request.form
-        print(data)
         
         email = request.form.get("email")
         password1 = request.form.get("password1")
