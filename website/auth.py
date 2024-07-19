@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 import psycopg2
+from .models import User
+from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
@@ -12,16 +14,19 @@ def signin():
 
         conn = connect_db()
         cur = conn.cursor()
-        cur.execute(f"SELECT users.email, users.password FROM users WHERE users.email = '{email}';")
+        cur.execute(f"SELECT * FROM users WHERE users.email = '{email}';")
         data = cur.fetchall()
         print("Data is")
-        print(data) 
+        print(data)
+
 
         if(len(data) < 1):
             flash('Email doesn\'t exist', category = 'error')
-        elif(password != data[0][1]):
+        elif(password != data[0][3]):
             flash('Email and password don\'t match', category='error')
         else:
+            user = User(data[0][0], data[0][1], data[0][2], data[0][3])
+            login_user(user, remember = True)
             return redirect(url_for('views.home'))
 
     return render_template("signin.html")
@@ -59,6 +64,12 @@ def signup():
 
 
     return render_template("signup.html")
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth.signin'))
 
 #Function to connect to the database
 def connect_db():
