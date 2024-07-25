@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 import psycopg2
 from .models import User
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
@@ -22,7 +23,7 @@ def signin():
 
         if(len(data) < 1):
             flash('Email doesn\'t exist', category = 'error')
-        elif(password != data[0][3]):
+        elif not (check_password_hash(data[0][3], password)):
             flash('Email and password don\'t match', category='error')
         else:
             user = User(data[0][0], data[0][1], data[0][2], data[0][3])
@@ -51,11 +52,12 @@ def signup():
         elif password1 != password2:
             flash('Passwords don\'t match', category='error')
         else:
+            hash = generate_password_hash(password1, method='sha256')
             cur.execute('INSERT INTO users (name, email, password)'
                 'VALUES (%s, %s, %s)',
                 (f'{name}',
                 f'{email}',
-                f'{password1}')
+                f'{hash}')
                 )
             flash('Account created succesfully', category = 'success')
             conn.commit()
