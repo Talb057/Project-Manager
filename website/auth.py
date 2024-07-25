@@ -59,10 +59,10 @@ def signup():
                 f'{email}',
                 f'{hash}')
                 )
-            flash('Account created succesfully', category = 'success')
             conn.commit()
             cur.close() 
             conn.close()
+            flash('Account created succesfully', category = 'success')
 
 
     return render_template("signup.html")

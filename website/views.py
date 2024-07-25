@@ -43,6 +43,24 @@ def project():
     print(project)
     return render_template("project.html", user = current_user, project = project)
 
+@views.route('/create-project', methods = ['GET','POST'])
+@login_required
+def create_project():
+    if request.method == "POST":
+        title = request.form.get("title")
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute('INSERT INTO projects (user_id, title)'
+                'VALUES (%s, %s)',
+                (f'{current_user.id}',
+                f'{title}')
+                )
+        conn.commit()
+        cur.close() 
+        conn.close()
+        return redirect(url_for("views.home"))
+    return render_template("create.html", user = current_user)
+
 #Function to connect to the database
 def connect_db():
     conn = psycopg2.connect(
