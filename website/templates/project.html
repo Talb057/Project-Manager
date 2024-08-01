@@ -24,25 +24,25 @@
         {% else %}
             <div class="container bgpurple rounded">
 
-                {% for i in range(0,4) %}
+                {% for i in range(0,length) %}
                 {% if i == 0 %}
                 
                 <div class="d-flex justify-content-between align-items-center colorvert m-3 p-2 pt-3 border-bottom border-light">
-                    <h5>Establish Signin</h5>
+                    <h5>{{tasks[i][1]}}</h5>
                     <button type="button" class="btn btn-warning">Done</button>
                 </div>
                 
-                {% elif i == 3 %}
+                {% elif i == (length - 1) %}
                 
                 <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3">
-                    <h5>Create Home page</h5>
+                    <h5>{{tasks[i][1]}}</h5>
                     <button type="button" class="btn btn-warning">Done</button>
                 </div>
                 
                 {% else %}
 
                 <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3 border-bottom border-light">
-                    <h5>Fix UI</h5>
+                    <h5>{{tasks[i][1]}}</h5>
                     <button type="button" class="btn btn-warning">Done</button>
                 </div>
 
