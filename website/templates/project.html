@@ -9,4 +9,62 @@
         <button type="button" class="btn btn-primary btn-lg">Edit Project</button>
     </section>
 
+    <section>
+
+        <h1>
+            <div class="display-6">Tasks</div>
+        </h1>
+        
+        {%if length < 1 %}
+        
+        <h1>
+            <div class="display-6 text-muted">No tasks were added to this project yet</div>
+        </h1>
+
+        {% else %}
+            <div class="container bgpurple rounded">
+
+                {% for i in range(0,4) %}
+                {% if i == 0 %}
+                
+                <div class="d-flex justify-content-between align-items-center colorvert m-3 p-2 pt-3 border-bottom border-light">
+                    <h5>Establish Signin</h5>
+                    <button type="button" class="btn btn-warning">Done</button>
+                </div>
+                
+                {% elif i == 3 %}
+                
+                <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3">
+                    <h5>Create Home page</h5>
+                    <button type="button" class="btn btn-warning">Done</button>
+                </div>
+                
+                {% else %}
+
+                <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3 border-bottom border-light">
+                    <h5>Fix UI</h5>
+                    <button type="button" class="btn btn-warning">Done</button>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+                <!-- {%for task in tasks %}
+                <div class="p-2 bgpurple">
+                    <div class="d-flex justify-content-between align-items-center bg-seconadry m-3">
+                        <h5>{{ task[1] }}</h5>
+                        <button type="button" class="btn btn-warning">Done</button>
+                    </div>
+                </div>
+                {% endfor %} -->
+                
+                <!-- <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3 border-bottom border-light">
+                    <h5>Create database</h5>
+                    <button type="button" class="btn btn-warning">Done</button>
+                </div> -->
+                
+                
+            </div>
+        {% endif %}
+    </section>
+
 {% endblock %}

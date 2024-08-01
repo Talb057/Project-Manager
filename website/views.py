@@ -36,12 +36,22 @@ def project():
     project_id = request.args.get('project_id')
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute(f"SELECT * FROM projects WHERE projects.project_id = '{project_id}';")
+    cur.execute(f"SELECT * FROM projects WHERE projects.project_id = {project_id};")
     project = cur.fetchall()
+    
     print("*********************project()")
     print(type(project))
     print(project)
-    return render_template("project.html", user = current_user, project = project)
+
+    cur.execute(f"SELECT tasks.id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id;")
+    tasks = cur.fetchall()
+    print()
+    print("*********************project()")
+    length = len(tasks)
+    print(type(tasks))
+    print(tasks)
+
+    return render_template("project.html", tasks = tasks, user = current_user, project = project, length = length)
 
 @views.route('/create-project', methods = ['GET','POST'])
 @login_required
