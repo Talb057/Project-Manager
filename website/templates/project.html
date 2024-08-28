@@ -60,24 +60,22 @@
                 
                 
                     <h5>{{tasks[i][1]}}</h5>
-                    <button type="button" class="btn btn-warning">Done</button>
+
+                    {% if tasks[i][2] %}
+
+                    <h5 class="text-muted fw-light fst-italic"> <i class="bi bi-check2"></i> Done </h5>
+
+                    {% else %}
+
+                    <form method="POST">
+                        <input type="hidden" name="task_id" value="{{ tasks[i][0] }}">
+                        <button type="submit" class="btn btn-warning">Done?</button>
+                    </form>
+
+                    {% endif %}
                 </div>
                 
                 {% endfor %}
-                <!-- {%for task in tasks %}
-                <div class="p-2 bgpurple">
-                    <div class="d-flex justify-content-between align-items-center bg-seconadry m-3">
-                        <h5>{{ task[1] }}</h5>
-                        <button type="button" class="btn btn-warning">Done</button>
-                    </div>
-                </div>
-                {% endfor %} -->
-                
-                <!-- <div class="d-flex justify-content-between align-items-center m-3 px-2 pb-3 border-bottom border-light">
-                    <h5>Create database</h5>
-                    <button type="button" class="btn btn-warning">Done</button>
-                </div> -->
-                
                 
             </div>
         {% endif %}

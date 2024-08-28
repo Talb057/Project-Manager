@@ -16,11 +16,6 @@ def home():
 
     if request.method == 'POST':
         project_id = int(request.form['project_id'])
-        # cur.execute(f"SELECT * FROM projects WHERE projects.project_id = '{project_id}';")
-        # project = cur.fetchall()
-        # print("****************home()")
-        # print(type(project))
-        # print(project)
         return redirect(url_for('views.project', project_id = project_id))
     else :
         cur.execute(f"SELECT * FROM projects WHERE projects.user_id = '{current_user.id}';")
@@ -30,12 +25,19 @@ def home():
         length = len(projects)
         return render_template("home.html", user = current_user, projects = projects, length = length)
 
-@views.route('/proj')
+@views.route('/proj', methods = ['GET', 'POST'])
 @login_required
 def project():
-    project_id = request.args.get('project_id')
     conn = connect_db()
     cur = conn.cursor()
+
+    if request.method == 'POST':
+        task_id = project_id = int(request.form['task_id'])
+        cur.execute(f"Update tasks SET done = TRUE WHERE task_id = {task_id}")
+        cur.execute(f"Update tasks SET done_user_id = {current_user.id} WHERE task_id = {task_id}")
+        conn.commit()
+
+    project_id = request.args.get('project_id')
     cur.execute(f"SELECT * FROM projects WHERE projects.project_id = {project_id};")
     project = cur.fetchall()
     
@@ -43,13 +45,16 @@ def project():
     print(type(project))
     print(project)
 
-    cur.execute(f"SELECT tasks.task_id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id;")
+    cur.execute(f"SELECT tasks.task_id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id ORDER BY tasks.task_id ASC;")
     tasks = cur.fetchall()
     print()
     print("*********************project()")
     length = len(tasks)
     print(type(tasks))
     print(tasks)
+
+    cur.close()
+    conn.close()
 
     return render_template("project.html", tasks = tasks, user = current_user, project = project, length = length)
 
