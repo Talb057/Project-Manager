@@ -12,13 +12,29 @@
     <section>
         <form method="post">
             <div class="form-group">
-                <label for="Password">Title</label>
-                <input type="name" class="form-control" id="title" name="title" placeholder="Name your Project">
+                <label for="Password"><div class="display-6">Title</div></label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="Name your Project">
             </div>
+            
+            <div class="mx-5">
+                <div class="d-flex justify-content-between align-items-start mt-4 mb-2">
+                    <div class="display-6">Tasks</div>
+                    <a type="button" class="btn btn-success" id="add" href="#">Add</a>
+                </div>
+
+                <div class="group">
+                    
+                </div>
+            </div>
+
+            
+            
+            
             <div class="container d-flex justify-content-center my-3">
                 <button type="submit" class="btn btn-lg btn-warning">Create</button>
             </div>
         </form>
     </section>
 
+    <script src="../static/script.js"></script>
 {% endblock %}

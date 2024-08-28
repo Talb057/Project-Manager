@@ -22,3 +22,17 @@ SET DEFAULT FALSE;
 INSERT INTO tasks
 VALUES (1, 2, 'Establish signin')
 ;
+
+UPDATE tasks
+SET done = True
+WHERE id = 1;
+
+CREATE TABLE tasks(                        
+task_id SERIAL PRIMARY KEY,
+project_id INT,
+description VARCHAR(255),
+done BOOLEAN,
+done_user_id INT);
+
+INSERT INTO tasks (project_id, description)
+VALUES (2, 'Establish signin');

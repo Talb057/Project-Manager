@@ -43,7 +43,7 @@ def project():
     print(type(project))
     print(project)
 
-    cur.execute(f"SELECT tasks.id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id;")
+    cur.execute(f"SELECT tasks.task_id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id;")
     tasks = cur.fetchall()
     print()
     print("*********************project()")
@@ -58,16 +58,37 @@ def project():
 def create_project():
     if request.method == "POST":
         title = request.form.get("title")
+        tasks = request.form.getlist("task[]")
+        print("******************")
+        print(tasks)
+        
+        
         conn = connect_db()
         cur = conn.cursor()
+
+        cur.execute('SELECT project_id FROM projects ORDER BY project_id DESC LIMIT 1;')
+
+        project_id = cur.fetchall()[0][0] + 1
+
+        #Creating the project
         cur.execute('INSERT INTO projects (user_id, title)'
                 'VALUES (%s, %s)',
                 (f'{current_user.id}',
                 f'{title}')
                 )
+        
+        #Creating Tasks
+        for task in tasks:
+            cur.execute('INSERT INTO tasks (project_id, description)'
+                        'VALUES (%s, %s)',
+                        (f'{project_id}',
+                        f'{task}')
+            )
+
         conn.commit()
         cur.close() 
         conn.close()
+
         return redirect(url_for("views.home"))
     return render_template("create.html", user = current_user)
 
