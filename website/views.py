@@ -45,18 +45,28 @@ def project():
     print(type(project))
     print(project)
 
-    cur.execute(f"SELECT tasks.task_id, tasks.description, tasks.done FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id ORDER BY tasks.task_id ASC;")
+    cur.execute(f"SELECT tasks.task_id, tasks.description, tasks.done, tasks.done_user_id FROM projects INNER JOIN tasks ON projects.project_id = {project_id} AND tasks.project_id = projects.project_id ORDER BY tasks.task_id ASC;")
     tasks = cur.fetchall()
+
+    taskDict = dict()
+    for task in tasks:
+        if task[2]:
+            cur.execute(f"SELECT name FROM users WHERE user_id = {task[3]}")
+            fodder = cur.fetchall()
+            taskDict[task[0]] = fodder[0][0]
+
     print()
     print("*********************project()")
     length = len(tasks)
     print(type(tasks))
     print(tasks)
+    print("******************************")
+    print(taskDict)
 
     cur.close()
     conn.close()
 
-    return render_template("project.html", tasks = tasks, user = current_user, project = project, length = length)
+    return render_template("project.html", tasks = tasks, user = current_user, project = project, length = length, taskDict = taskDict)
 
 @views.route('/create-project', methods = ['GET','POST'])
 @login_required
