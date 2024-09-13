@@ -1,15 +1,10 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 import psycopg2
 from flask_login import LoginManager
-
-db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'miftah dar'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:berserk@localhost/project_db'
-    db.init_app(app)
 
     from .views import views
     from .auth import auth
