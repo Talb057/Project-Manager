@@ -52,7 +52,7 @@ def signup():
         elif password1 != password2:
             flash('Passwords don\'t match', category='error')
         else:
-            hash = generate_password_hash(password1, method='sha256')
+            hash = generate_password_hash(password1, method='scrypt')
             cur.execute('INSERT INTO users (name, email, password)'
                 'VALUES (%s, %s, %s)',
                 (f'{name}',

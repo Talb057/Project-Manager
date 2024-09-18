@@ -36,3 +36,13 @@ done_user_id INT);
 
 INSERT INTO tasks (project_id, description)
 VALUES (2, 'Establish signin');
+
+
+CREATE TABLE project_users (                        
+    project_id INT,
+    user_id INT                                        
+);
+
+CREATE TABLE projects(project_id serial PRIMARY KEY,
+user_id INT,
+title VARCHAR(255));
